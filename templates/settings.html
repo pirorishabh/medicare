@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<script>document.body.dataset.page='settings'</script>
+<div class="page-content">
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Settings</h1>
+      <p class="page-subtitle">Customize your MedAssist AI experience.</p>
+    </div>
+    <div class="page-header-icon"><i class="fas fa-cog"></i></div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-3">
+      <!-- Settings nav -->
+      <div class="card">
+        <div class="card-body" style="padding:.75rem;">
+          {% set sections = [
+            ('fa-palette','Appearance','appearance'),
+            ('fa-robot','AI Settings','ai'),
+            ('fa-bell','Notifications','notifications'),
+            ('fa-shield-alt','Privacy','privacy'),
+            ('fa-universal-access','Accessibility','accessibility'),
+            ('fa-language','Language','language'),
+          ] %}
+          {% for icon, label, target in sections %}
+          <a href="#{{ target }}" style="display:flex;align-items:center;gap:.625rem;padding:.625rem .875rem;border-radius:10px;color:var(--text-secondary);text-decoration:none;font-size:.875rem;font-weight:500;transition:all .2s;margin-bottom:.125rem;"
+             onmouseover="this.style.background='var(--bg-tertiary)'" onmouseout="this.style.background=''">
+            <i class="fas {{ icon }}" style="width:18px;text-align:center;color:var(--primary);"></i>
+            {{ label }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+      <form id="settings-form">
+
+        <!-- Appearance -->
+        <div class="card mb-4" id="appearance">
+          <div class="card-header">
+            <i class="fas fa-palette" style="color:var(--primary);"></i>
+            <span style="font-weight:700;">Appearance</span>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.875rem 0;border-bottom:1px solid var(--border-light);">
+              <div>
+                <div style="font-weight:600;">Dark Mode</div>
+                <div style="font-size:.8rem;color:var(--text-muted);">Switch between light and dark themes</div>
+              </div>
+              <button type="button" onclick="Theme.toggle()" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-moon me-1"></i>Toggle Theme
+              </button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.875rem 0;">
+              <div>
+                <div style="font-weight:600;">Compact Sidebar</div>
+                <div style="font-size:.8rem;color:var(--text-muted);">Collapse sidebar to icon-only mode</div>
+              </div>
+              <button type="button" onclick="Sidebar.toggle()" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-compress-alt me-1"></i>Toggle Sidebar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Settings -->
+        <div class="card mb-4" id="ai">
+          <div class="card-header">
+            <i class="fas fa-robot" style="color:var(--primary);"></i>
+            <span style="font-weight:700;">AI Assistant Settings</span>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label class="form-label">AI Response Style</label>
+              <select class="form-control" name="ai_style">
+                <option value="balanced">Balanced (Recommended)</option>
+                <option value="concise">Concise & Brief</option>
+                <option value="detailed">Detailed & Comprehensive</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Include Always</label>
+              <div style="display:flex;flex-direction:column;gap:.625rem;margin-top:.5rem;">
+                <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;">
+                  <input type="checkbox" name="include_disclaimers" checked style="width:16px;height:16px;cursor:pointer;">
+                  <span style="font-size:.875rem;">Medical disclaimers in responses</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;">
+                  <input type="checkbox" name="include_references" checked style="width:16px;height:16px;cursor:pointer;">
+                  <span style="font-size:.875rem;">Recommended next steps</span>
+                </label>
+                <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;">
+                  <input type="checkbox" name="include_emergency" checked style="width:16px;height:16px;cursor:pointer;">
+                  <span style="font-size:.875rem;">Emergency warning signs when relevant</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Voice Output Speed</label>
+              <input type="range" name="voice_speed" min="0.5" max="2" step="0.1" value="0.9"
+                     style="width:100%;accent-color:var(--primary);">
+              <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--text-muted);">
+                <span>Slow</span><span>Normal</span><span>Fast</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="card mb-4" id="notifications">
+          <div class="card-header">
+            <i class="fas fa-bell" style="color:var(--primary);"></i>
+            <span style="font-weight:700;">Notifications</span>
+          </div>
+          <div class="card-body">
+            {% set notif_settings = [
+              ('notif_medication','Medication reminders','Remind me when it\'s time to take medications'),
+              ('notif_appointments','Appointment reminders','Notify me 24h and 1h before appointments'),
+              ('notif_tips','Daily health tips','Receive a daily health tip from AI'),
+              ('notif_goals','Goal progress updates','Weekly summary of health goal progress'),
+            ] %}
+            {% for name, label, desc in notif_settings %}
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:.875rem 0;border-bottom:1px solid var(--border-light);">
+              <div>
+                <div style="font-weight:600;font-size:.9rem;">{{ label }}</div>
+                <div style="font-size:.8rem;color:var(--text-muted);">{{ desc }}</div>
+              </div>
+              <label style="position:relative;display:inline-block;width:44px;height:24px;cursor:pointer;">
+                <input type="checkbox" name="{{ name }}" checked style="opacity:0;width:0;height:0;">
+                <span style="position:absolute;inset:0;background:var(--primary);border-radius:12px;transition:.3s;"></span>
+                <span style="position:absolute;left:3px;top:3px;width:18px;height:18px;background:white;border-radius:50%;transition:.3s;"></span>
+              </label>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Privacy -->
+        <div class="card mb-4" id="privacy">
+          <div class="card-header">
+            <i class="fas fa-shield-alt" style="color:var(--primary);"></i>
+            <span style="font-weight:700;">Privacy & Data</span>
+          </div>
+          <div class="card-body">
+            <div class="disclaimer-box mb-3">
+              <i class="fas fa-info-circle"></i>
+              <div style="font-size:.85rem;">MedAssist AI stores your health data locally in your browser.
+              No personal health data is sent to external servers except for AI analysis requests which are processed
+              by IBM watsonx.</div>
+            </div>
+            <div style="display:flex;gap:.75rem;flex-wrap:wrap;">
+              <button type="button" class="btn btn-ghost btn-sm" onclick="if(confirm('Clear all chat history?')){Chat.clearChat();}">
+                <i class="fas fa-comment-slash me-1"></i>Clear Chat History
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm" onclick="if(confirm('Clear all local data?')){localStorage.clear();location.reload();}">
+                <i class="fas fa-trash-alt me-1"></i>Clear All Data
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm" onclick="Chat.exportChat()">
+                <i class="fas fa-download me-1"></i>Export My Data
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accessibility -->
+        <div class="card mb-4" id="accessibility">
+          <div class="card-header">
+            <i class="fas fa-universal-access" style="color:var(--primary);"></i>
+            <span style="font-weight:700;">Accessibility</span>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label class="form-label">Text Size</label>
+              <select class="form-control" name="text_size" onchange="document.documentElement.style.fontSize=this.value">
+                <option value="14px">Small (14px)</option>
+                <option value="15px" selected>Default (15px)</option>
+                <option value="16px">Large (16px)</option>
+                <option value="18px">Extra Large (18px)</option>
+              </select>
+            </div>
+            <div style="margin-top:.5rem;">
+              <label style="display:flex;align-items:center;gap:.75rem;cursor:pointer;">
+                <input type="checkbox" name="reduce_motion" style="width:16px;height:16px;">
+                <div>
+                  <div style="font-weight:600;font-size:.9rem;">Reduce Animations</div>
+                  <div style="font-size:.8rem;color:var(--text-muted);">Minimize motion for accessibility</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:.75rem;">
+          <button type="button" class="btn btn-ghost" onclick="Settings.init()">Reset</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-2"></i>Save Settings
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+<script>document.body.dataset.page='profile'</script>
+
+{% block content %}
+<div class="page-content">
+
+  <!-- Profile Hero -->
+  <div style="background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:20px;padding:2rem;margin-bottom:2rem;color:white;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:rgba(255,255,255,.1);border-radius:50%;"></div>
+    <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;position:relative;z-index:1;">
+      <div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.2);border:3px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:800;flex-shrink:0;">U</div>
+      <div>
+        <h2 style="color:white;margin-bottom:.25rem;">John Doe</h2>
+        <div style="color:rgba(255,255,255,.7);font-size:.875rem;">john.doe@email.com</div>
+        <div style="display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap;">
+          <span style="background:rgba(255,255,255,.15);padding:.25rem .75rem;border-radius:999px;font-size:.75rem;font-weight:600;">Free Plan</span>
+          <span style="background:rgba(255,255,255,.15);padding:.25rem .75rem;border-radius:999px;font-size:.75rem;font-weight:600;">Member since Jan 2024</span>
+        </div>
+      </div>
+      <div class="ms-auto d-none d-md-flex" style="gap:.75rem;">
+        <button class="btn btn-ghost" style="color:white;border-color:rgba(255,255,255,.3);" onclick="Toast.info('Feature','Profile editing coming soon!')">
+          <i class="fas fa-edit me-2"></i>Edit Profile
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- Personal Info -->
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-user" style="color:var(--primary);"></i>
+          <span style="font-weight:700;">Personal Information</span>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" value="John Doe">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" value="john.doe@email.com">
+          </div>
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-control" value="1990-05-15">
+            </div>
+            <div class="col-6">
+              <label class="form-label">Gender</label>
+              <select class="form-control">
+                <option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary mt-3" onclick="Toast.success('Saved','Profile updated.')">
+            <i class="fas fa-save me-2"></i>Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Health Profile -->
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-heartbeat" style="color:var(--danger);"></i>
+          <span style="font-weight:700;">Health Profile</span>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label">Height (cm)</label>
+              <input type="number" class="form-control" value="175">
+            </div>
+            <div class="col-6">
+              <label class="form-label">Weight (kg)</label>
+              <input type="number" class="form-control" value="78">
+            </div>
+          </div>
+          <div class="form-group mt-3">
+            <label class="form-label">Blood Type</label>
+            <select class="form-control">
+              {% for bt in ['A+','A-','B+','B-','AB+','AB-','O+','O-','Unknown'] %}
+              <option {% if bt == 'O+' %}selected{% endif %}>{{ bt }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Known Health Conditions</label>
+            <textarea class="form-control" rows="2" placeholder="e.g. Type 2 Diabetes, Hypertension…">Type 2 Diabetes, Hypertension</textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Known Allergies</label>
+            <input type="text" class="form-control" value="Penicillin" placeholder="e.g. Penicillin, Shellfish…">
+          </div>
+          <button class="btn btn-secondary mt-2" onclick="Toast.success('Saved','Health profile updated.')">
+            <i class="fas fa-save me-2"></i>Save Health Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Wellness Plan -->
+    <div class="col-12">
+      <div class="card" style="background:linear-gradient(135deg,rgba(37,99,235,.04),rgba(13,148,136,.04));border-color:rgba(37,99,235,.15);">
+        <div class="card-header">
+          <i class="fas fa-robot" style="color:var(--primary);"></i>
+          <span style="font-weight:700;">Generate AI Wellness Plan</span>
+        </div>
+        <div class="card-body">
+          <p style="color:var(--text-secondary);font-size:.9rem;margin-bottom:1.25rem;">
+            Get a personalized wellness plan generated by IBM watsonx based on your health profile.
+          </p>
+          <button class="btn btn-primary" onclick="generateWellnessPlan()">
+            <i class="fas fa-magic me-2"></i>Generate My Wellness Plan
+          </button>
+          <div id="wellness-plan-result" style="margin-top:1.25rem;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function generateWellnessPlan() {
+  Loader.show('wellness-plan-result');
+  try {
+    const data = await API.wellnessPlan({
+      age: 34, gender: 'male',
+      conditions: 'Type 2 Diabetes, Hypertension',
+      goals: 'weight loss, better blood sugar control, reduce blood pressure'
+    });
+    renderAIResult('wellness-plan-result', data.plan, 'Your Personalized Wellness Plan');
+  } catch (err) {
+    Loader.renderResult('wellness-plan-result', `<div class="alert alert-danger">Error: ${err.message}</div>`);
+  }
+}
+</script>
+{% endblock %}
