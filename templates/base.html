@@ -114,6 +114,30 @@
 <!-- ═══ TOAST CONTAINER ═══════════════════════════════════════════════════ -->
 <div id="toast-container" class="toast-container"></div>
 
+<!-- ═══ EMERGENCY CONTACTS ════════════════════════════════════════════════ -->
+<button id="sos-fab" class="sos-fab" onclick="Emergency.toggle()" title="Emergency Contacts">
+  <i class="fas fa-phone-alt"></i>
+</button>
+
+<div id="sos-panel" class="sos-panel" style="display:none;">
+  <div class="sos-panel-header">
+    <span><i class="fas fa-ambulance me-2"></i>Emergency Contacts</span>
+    <button class="sos-close-btn" onclick="Emergency.toggle()" title="Close">&times;</button>
+  </div>
+
+  <ul class="sos-list" id="sos-list">
+    <!-- Default 108 — rendered by JS so it stays consistent -->
+  </ul>
+
+  <div class="sos-add-row">
+    <input type="text" id="sos-name-input" class="sos-input" placeholder="Hospital / Contact name">
+    <input type="tel"  id="sos-num-input"  class="sos-input" placeholder="Phone number">
+    <button class="sos-add-btn" onclick="Emergency.addContact()">
+      <i class="fas fa-plus"></i> Add
+    </button>
+  </div>
+</div>
+
 <!-- ═══ MOBILE SIDEBAR OVERLAY ════════════════════════════════════════════ -->
 <div id="sidebar-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:999;"
      onclick="Sidebar.toggleMobile()"></div>

@@ -885,6 +885,114 @@ const GlobalSearch = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
+// EMERGENCY CONTACTS
+// ═══════════════════════════════════════════════════════════════════
+
+const Emergency = {
+  STORAGE_KEY: 'medassist-emergency-contacts',
+  DEFAULT: { name: 'Ambulance (National)', number: '108' },
+
+  _contacts: [],
+  _open: false,
+
+  init() {
+    const stored = localStorage.getItem(this.STORAGE_KEY);
+    this._contacts = stored ? JSON.parse(stored) : [];
+    this._render();
+
+    // Close panel when clicking outside
+    document.addEventListener('click', (e) => {
+      const panel = document.getElementById('sos-panel');
+      const fab   = document.getElementById('sos-fab');
+      if (this._open && panel && !panel.contains(e.target) && !fab.contains(e.target)) {
+        this._closePanel();
+      }
+    });
+
+    // Enter key in number field triggers add
+    const numInput = document.getElementById('sos-num-input');
+    if (numInput) numInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') this.addContact(); });
+  },
+
+  toggle() {
+    this._open ? this._closePanel() : this._openPanel();
+  },
+
+  _openPanel() {
+    const panel = document.getElementById('sos-panel');
+    const fab   = document.getElementById('sos-fab');
+    if (!panel) return;
+    panel.style.display = 'block';
+    fab && fab.classList.add('active');
+    this._open = true;
+  },
+
+  _closePanel() {
+    const panel = document.getElementById('sos-panel');
+    const fab   = document.getElementById('sos-fab');
+    if (!panel) return;
+    panel.style.display = 'none';
+    fab && fab.classList.remove('active');
+    this._open = false;
+  },
+
+  _render() {
+    const list = document.getElementById('sos-list');
+    if (!list) return;
+
+    // Build items: default 108 (non-deletable) + user contacts
+    const allItems = [
+      { name: this.DEFAULT.name, number: this.DEFAULT.number, deletable: false },
+      ...this._contacts.map((c, i) => ({ ...c, deletable: true, idx: i }))
+    ];
+
+    list.innerHTML = allItems.map(item => `
+      <li>
+        <div class="sos-contact-info">
+          <div class="sos-contact-name">${this._escape(item.name)}</div>
+          <div class="sos-contact-num">${this._escape(item.number)}</div>
+        </div>
+        <a href="tel:${this._escape(item.number)}" class="sos-call-btn" title="Call">
+          <i class="fas fa-phone"></i>
+        </a>
+        ${item.deletable
+          ? `<button class="sos-delete-btn" onclick="Emergency.removeContact(${item.idx})" title="Remove"><i class="fas fa-times"></i></button>`
+          : ''}
+      </li>`).join('');
+  },
+
+  addContact() {
+    const nameEl = document.getElementById('sos-name-input');
+    const numEl  = document.getElementById('sos-num-input');
+    const name   = nameEl ? nameEl.value.trim() : '';
+    const number = numEl  ? numEl.value.trim()  : '';
+
+    if (!number) { Toast.show('Missing number', 'Please enter a phone number.', 'warning'); return; }
+
+    this._contacts.push({ name: name || 'Hospital', number });
+    this._save();
+    this._render();
+    if (nameEl) nameEl.value = '';
+    if (numEl)  numEl.value  = '';
+    Toast.show('Contact added', `${name || 'Hospital'} (${number}) saved.`, 'success', 3000);
+  },
+
+  removeContact(idx) {
+    this._contacts.splice(idx, 1);
+    this._save();
+    this._render();
+  },
+
+  _save() {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this._contacts));
+  },
+
+  _escape(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+};
+
+// ═══════════════════════════════════════════════════════════════════
 // INITIALIZATION
 // ═══════════════════════════════════════════════════════════════════
 
@@ -893,6 +1001,7 @@ document.addEventListener('DOMContentLoaded', () => {
   Toast.init();
   Sidebar.init();
   GlobalSearch.init();
+  Emergency.init();
 
   // Page-specific initializations
   const page = document.body.dataset.page;
