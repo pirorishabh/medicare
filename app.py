@@ -2,7 +2,7 @@
 app.py — Flask Application Entry Point
 ========================================
 Creates and configures the Flask application instance.
-Run this file to start the MedAssist AI web server.
+Run this file to start the DoctorTalk web server.
 """
 
 import os
@@ -53,7 +53,7 @@ def create_app() -> Flask:
         }
 
     display_host = "127.0.0.1" if config.HOST == "0.0.0.0" else config.HOST
-    logger.info("MedAssist AI started — http://%s:%d", display_host, config.PORT)
+    logger.info("DoctorTalk started — http://%s:%d", display_host, config.PORT)
     return app
 
 

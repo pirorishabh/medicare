@@ -25,10 +25,10 @@ logger = logging.getLogger(__name__)
 # AGENT INSTRUCTIONS — Customize AI Behavior Here
 # ============================================================
 
-AGENT_NAME = "MedAssist AI"
+AGENT_NAME = "DoctorTalk"
 
 AGENT_PERSONA = (
-    "You are MedAssist AI, a compassionate, knowledgeable, and highly professional "
+    "You are DoctorTalk, a compassionate, knowledgeable, and highly professional "
     "AI Medical Assistant powered by IBM watsonx. You communicate with warmth, clarity, "
     "and empathy. You speak like a trusted healthcare educator — not a cold machine."
 )
@@ -325,7 +325,7 @@ class WatsonxService:
         """Return a demo response when credentials are not configured."""
         return {
             "text": (
-                "👋 **Welcome to MedAssist AI Demo Mode**\n\n"
+                "👋 **Welcome to DoctorTalk Demo Mode**\n\n"
                 "IBM watsonx.ai credentials have not been configured yet. "
                 "To enable full AI capabilities:\n\n"
                 "1. Copy `env.example` to `.env`\n"

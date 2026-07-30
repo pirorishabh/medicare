@@ -35,7 +35,7 @@ class Config:
     ALLOWED_EXTENSIONS = {"pdf", "docx", "txt"}
 
     # App
-    APP_NAME = os.getenv("APP_NAME", "MedAssist AI")
+    APP_NAME = os.getenv("APP_NAME", "DoctorTalk")
     APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
 
 

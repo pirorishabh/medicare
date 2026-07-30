@@ -95,6 +95,10 @@ def feedback():
 def contact():
     return render_template("contact.html")
 
+@main_bp.route("/pill-reminder")
+def pill_reminder():
+    return render_template("pill_reminder.html")
+
 
 # ══════════════════════════════════════════════════════════════
 # API ROUTES — AI Features

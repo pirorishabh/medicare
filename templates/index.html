@@ -279,7 +279,7 @@
               <div class="pulse-ring">
                 <i class="fas fa-heartbeat heart-icon"></i>
               </div>
-              <div style="font-weight:700;font-size:1.1rem;color:white;margin-bottom:0.5rem;">MedAssist AI</div>
+              <div style="font-weight:700;font-size:1.1rem;color:white;margin-bottom:0.5rem;">DoctorTalk</div>
               <div style="font-size:0.8rem;color:rgba(255,255,255,0.6);">IBM watsonx Orchestrate</div>
               <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:1rem;">
                 <span style="background:rgba(52,211,153,0.2);color:#34d399;padding:.25rem .625rem;border-radius:999px;font-size:.72rem;font-weight:600;">● Live</span>
@@ -328,14 +328,14 @@
           ('fa-stethoscope','bg-teal','Symptom Checker','Describe your symptoms and receive educational analysis, specialist recommendations, and warning signs.','/symptoms'),
           ('fa-book-medical','bg-purple','Disease Library','Deep-dive into any chronic condition with complete information on causes, treatments, and prevention.','/diseases'),
           ('fa-pills','bg-green','Medication Info','Comprehensive drug information including uses, dosage, side effects, and drug interactions.','/medications'),
-          ('fa-file-medical-alt','bg-warm','Report Analysis','Upload your medical reports (PDF/DOCX) and get plain-language AI explanations.','/reports'),
-          ('fa-chart-line','bg-amber','Health Dashboard','Track vitals, medications, appointments, goals, sleep, and exercise in one beautiful view.','/dashboard'),
-          ('fa-history','bg-primary','Health Timeline','Maintain a chronological health history with important medical events and milestones.','/timeline'),
-          ('fa-calendar-check','bg-teal','Appointments','Schedule and track healthcare appointments with reminder notifications.','/appointments'),
-          ('fa-shield-alt','bg-purple','Safety First','Every response includes medical disclaimers and recommendations to consult professionals.','/about'),
-          ('fa-moon','bg-green','Dark Mode','Switch between beautiful light and dark themes optimized for any lighting condition.','/settings'),
-          ('fa-volume-up','bg-warm','Voice Interface','Listen to AI responses with text-to-speech and input using voice recognition.','/chat'),
-          ('fa-download','bg-amber','Export Chats','Download your conversation history as a text file for your records.','/chat'),
+          ('fa-bell','bg-warm','Pill Reminder','Set daily reminders for every pill with dose time, instructions, and browser alerts — perfect for elderly patients.','/pill-reminder'),
+          ('fa-file-medical-alt','bg-amber','Report Analysis','Upload your medical reports (PDF/DOCX) and get plain-language AI explanations.','/reports'),
+          ('fa-chart-line','bg-primary','Health Dashboard','Track vitals, medications, appointments, goals, sleep, and exercise in one beautiful view.','/dashboard'),
+          ('fa-history','bg-teal','Health Timeline','Maintain a chronological health history with important medical events and milestones.','/timeline'),
+          ('fa-calendar-check','bg-purple','Appointments','Schedule and track healthcare appointments with reminder notifications.','/appointments'),
+          ('fa-shield-alt','bg-green','Safety First','Every response includes medical disclaimers and recommendations to consult professionals.','/about'),
+          ('fa-moon','bg-warm','Dark Mode','Switch between beautiful light and dark themes optimized for any lighting condition.','/settings'),
+          ('fa-volume-up','bg-amber','Voice Interface','Listen to AI responses with text-to-speech and input using voice recognition.','/chat'),
         ] %}
         {% for icon, color, title, desc, url in features %}
         <div class="col-md-6 col-lg-4 fade-in">
@@ -433,9 +433,9 @@
       <div class="row justify-content-center">
         <div class="col-lg-8">
           {% set faqs = [
-            ('Is MedAssist AI a replacement for my doctor?', 'No. MedAssist AI is an educational health resource powered by IBM watsonx AI. It provides health information, disease education, and wellness guidance, but does NOT replace professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional.'),
-            ('How does the IBM watsonx integration work?', 'MedAssist AI connects to IBM watsonx Orchestrate via a secure API key stored in a .env file. The AI processes your health questions and returns evidence-based educational responses. Your API key is never exposed in the frontend.'),
-            ('Is my health data private?', 'MedAssist AI does not permanently store personal health data. Conversations are kept in your browser session only. No personal health information is sent to third-party servers beyond the watsonx API for generating responses.'),
+            ('Is DoctorTalk a replacement for my doctor?', 'No. DoctorTalk is an educational health resource powered by IBM watsonx AI. It provides health information, disease education, and wellness guidance, but does NOT replace professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional.'),
+            ('How does the IBM watsonx integration work?', 'DoctorTalk connects to IBM watsonx Orchestrate via a secure API key stored in a .env file. The AI processes your health questions and returns evidence-based educational responses. Your API key is never exposed in the frontend.'),
+            ('Is my health data private?', 'DoctorTalk does not permanently store personal health data. Conversations are kept in your browser session only. No personal health information is sent to third-party servers beyond the watsonx API for generating responses.'),
             ('What file formats can I upload for report analysis?', 'You can upload PDF, DOCX (Microsoft Word), and TXT files. The system extracts the text content and sends it to IBM watsonx for plain-language explanation.'),
             ('Can I use voice input for the AI chat?', 'Yes! The chat interface supports voice input via the Web Speech API. Click the microphone icon to speak your health question. Text-to-speech is also available to have responses read aloud.'),
             ('How do I configure my IBM watsonx API key?', 'Copy the env.example file to .env in the project root, then add your WATSONX_API_KEY and WATSONX_PROJECT_ID from IBM Cloud. The app will use demo mode if keys are not configured.'),
@@ -460,7 +460,7 @@
   <section class="cta-section">
     <div class="container text-center">
       <h2 class="cta-title mb-3">Ready to Transform Your Health Journey?</h2>
-      <p class="cta-sub mb-4">Start chatting with MedAssist AI — your intelligent health education companion.</p>
+      <p class="cta-sub mb-4">Start chatting with DoctorTalk — your intelligent health education companion.</p>
       <a href="/chat" class="btn-hero-primary" style="margin:0 auto;display:inline-flex;font-size:1.1rem;padding:1rem 2.5rem;">
         <i class="fas fa-robot"></i> Start Free with AI Chat
       </a>
@@ -496,6 +496,7 @@
           <a href="/symptoms" class="footer-link">Symptoms</a>
           <a href="/diseases" class="footer-link">Diseases</a>
           <a href="/medications" class="footer-link">Medications</a>
+          <a href="/pill-reminder" class="footer-link">Pill Reminder</a>
           <a href="/reports" class="footer-link">Reports</a>
         </div>
         <div class="col-6 col-lg-2">

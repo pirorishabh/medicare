@@ -36,7 +36,7 @@
     <div style="text-align:center;margin-bottom:2rem;">
       <div style="width:56px;height:56px;background:linear-gradient(135deg,#2563eb,#0d9488);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto .875rem;">❤️</div>
       <div style="font-size:1.375rem;font-weight:800;color:white;">Create Your Account</div>
-      <div style="color:rgba(255,255,255,.5);font-size:.875rem;margin-top:.25rem;">Join MedAssist AI — Free forever</div>
+      <div style="color:rgba(255,255,255,.5);font-size:.875rem;margin-top:.25rem;">Join DoctorTalk — Free forever</div>
     </div>
 
     <form onsubmit="handleRegister(event)">
@@ -75,7 +75,7 @@
         <label style="display:flex;align-items:flex-start;gap:.625rem;cursor:pointer;">
           <input type="checkbox" required style="width:16px;height:16px;cursor:pointer;margin-top:2px;flex-shrink:0;">
           <span style="color:rgba(255,255,255,.6);font-size:.8rem;line-height:1.5;">
-            I agree to the Terms of Service and understand that MedAssist AI provides educational health information only — not medical advice.
+            I agree to the Terms of Service and understand that DoctorTalk provides educational health information only — not medical advice.
           </span>
         </label>
       </div>
@@ -99,7 +99,7 @@ function handleRegister(e) {
   e.preventDefault();
   const emailEl = document.getElementById('reg-email');
   LoginHistory.record(emailEl ? emailEl.value.trim() : 'New User');
-  Toast.show('Account Created!', 'Welcome to MedAssist AI.', 'success');
+  Toast.show('Account Created!', 'Welcome to DoctorTalk.', 'success');
   setTimeout(() => { window.location.href = '/dashboard'; }, 900);
 }
 </script>
