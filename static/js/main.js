@@ -854,6 +854,7 @@ const GlobalSearch = {
     { name: 'Medical Reports', url: '/reports', icon: 'fa-file-medical' },
     { name: 'Timeline', url: '/timeline', icon: 'fa-history' },
     { name: 'Appointments', url: '/appointments', icon: 'fa-calendar' },
+    { name: 'Login History', url: '/login-history', icon: 'fa-history' },
     { name: 'Settings', url: '/settings', icon: 'fa-cog' },
     { name: 'About', url: '/about', icon: 'fa-info-circle' },
   ],
@@ -993,6 +994,128 @@ const Emergency = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
+// LOGIN HISTORY
+// ═══════════════════════════════════════════════════════════════════
+
+const LoginHistory = {
+  STORAGE_KEY: 'medassist-login-history',
+  MAX_ENTRIES: 50,
+
+  /** Record a new login event. Call this just before redirecting to dashboard. */
+  record(email) {
+    const entries = this.getAll();
+    const ua = navigator.userAgent || '';
+    entries.unshift({
+      email:   email || 'Guest',
+      time:    new Date().toISOString(),
+      browser: this._parseBrowser(ua),
+      os:      this._parseOS(ua),
+      device:  /Mobi|Android/i.test(ua) ? 'Mobile' : 'Desktop',
+      current: true,
+    });
+    // Mark previous entries as not current
+    entries.slice(1).forEach(e => { e.current = false; });
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(entries.slice(0, this.MAX_ENTRIES)));
+  },
+
+  /** Return all stored entries (newest first). */
+  getAll() {
+    try {
+      return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
+    } catch { return []; }
+  },
+
+  /** Clear all history. */
+  clear() {
+    localStorage.removeItem(this.STORAGE_KEY);
+  },
+
+  /** Render the full history table into #login-history-tbody if present. */
+  render() {
+    const tbody = document.getElementById('login-history-tbody');
+    const empty = document.getElementById('login-history-empty');
+    const counter = document.getElementById('login-history-count');
+    if (!tbody) return;
+
+    const entries = this.getAll();
+    if (counter) counter.textContent = entries.length;
+
+    if (!entries.length) {
+      tbody.innerHTML = '';
+      if (empty) empty.style.display = 'block';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+
+    tbody.innerHTML = entries.map((e, idx) => {
+      const dt = new Date(e.time);
+      const dateStr = dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+      const timeStr = dt.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+      const badge = e.current && idx === 0
+        ? `<span style="background:#dcfce7;color:#15803d;font-size:.7rem;font-weight:700;padding:.15rem .55rem;border-radius:999px;margin-left:.5rem;">Current</span>`
+        : '';
+      return `
+        <tr>
+          <td style="font-size:.8rem;color:var(--text-muted);">${idx + 1}</td>
+          <td>
+            <span style="font-weight:600;">${this._esc(e.email)}</span>${badge}
+          </td>
+          <td>
+            <div style="font-weight:600;font-size:.875rem;">${dateStr}</div>
+            <div style="font-size:.78rem;color:var(--text-muted);">${timeStr}</div>
+          </td>
+          <td>
+            <span style="display:inline-flex;align-items:center;gap:.35rem;font-size:.82rem;">
+              <i class="fas ${e.device === 'Mobile' ? 'fa-mobile-alt' : 'fa-desktop'}" style="color:var(--primary);width:14px;"></i>
+              ${this._esc(e.device)}
+            </span>
+          </td>
+          <td style="font-size:.82rem;">${this._esc(e.browser)}</td>
+          <td style="font-size:.82rem;">${this._esc(e.os)}</td>
+          <td>
+            <button onclick="LoginHistory.deleteEntry(${idx})"
+              style="background:#fee2e2;color:#dc2626;border:none;border-radius:6px;padding:.2rem .55rem;font-size:.75rem;cursor:pointer;">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>`;
+    }).join('');
+  },
+
+  /** Delete a single entry by index and re-render. */
+  deleteEntry(idx) {
+    const entries = this.getAll();
+    entries.splice(idx, 1);
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(entries));
+    this.render();
+    Toast.show('Removed', 'Login record deleted.', 'success', 2500);
+  },
+
+  _parseBrowser(ua) {
+    if (/Edg\//.test(ua))     return 'Edge';
+    if (/OPR\//.test(ua))     return 'Opera';
+    if (/Chrome\//.test(ua))  return 'Chrome';
+    if (/Firefox\//.test(ua)) return 'Firefox';
+    if (/Safari\//.test(ua))  return 'Safari';
+    return 'Unknown';
+  },
+
+  _parseOS(ua) {
+    if (/Windows NT 10/.test(ua)) return 'Windows 10/11';
+    if (/Windows/.test(ua))       return 'Windows';
+    if (/Android/.test(ua))       return 'Android';
+    if (/iPhone|iPad/.test(ua))   return 'iOS';
+    if (/Mac OS X/.test(ua))      return 'macOS';
+    if (/Linux/.test(ua))         return 'Linux';
+    return 'Unknown';
+  },
+
+  _esc(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════════
 // INITIALIZATION
 // ═══════════════════════════════════════════════════════════════════
 
@@ -1014,4 +1137,5 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page === 'appointments') Appointments.init();
   if (page === 'timeline') HealthTimeline.init();
   if (page === 'settings') Settings.init();
+  if (page === 'login-history') LoginHistory.render();
 });

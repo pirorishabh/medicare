@@ -56,7 +56,7 @@
       </div>
       <div class="form-group" style="margin-top:1rem;">
         <label class="auth-label">Email Address</label>
-        <input type="email" class="auth-input" placeholder="you@example.com" required>
+        <input type="email" id="reg-email" class="auth-input" placeholder="you@example.com" required>
       </div>
       <div class="form-group" style="margin-top:1rem;">
         <label class="auth-label">Date of Birth</label>
@@ -97,8 +97,10 @@
 <script>
 function handleRegister(e) {
   e.preventDefault();
-  Toast.success('Account Created!', 'Welcome to MedAssist AI.');
-  setTimeout(() => window.location.href = '/dashboard', 900);
+  const emailEl = document.getElementById('reg-email');
+  LoginHistory.record(emailEl ? emailEl.value.trim() : 'New User');
+  Toast.show('Account Created!', 'Welcome to MedAssist AI.', 'success');
+  setTimeout(() => { window.location.href = '/dashboard'; }, 900);
 }
 </script>
 {% endblock %}

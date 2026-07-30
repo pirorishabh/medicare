@@ -67,13 +67,17 @@ def settings():
 def about():
     return render_template("about.html")
 
-@main_bp.route("/login")
+@main_bp.route("/login", methods=["GET", "POST"])
 def login():
     return render_template("login.html")
 
 @main_bp.route("/register")
 def register():
     return render_template("register.html")
+
+@main_bp.route("/login-history")
+def login_history():
+    return render_template("login_history.html")
 
 @main_bp.route("/profile")
 def profile():

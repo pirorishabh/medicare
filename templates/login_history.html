@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Login History{% endblock %}
+
+{% block content %}
+<script>document.body.dataset.page='login-history'</script>
+<div class="page-content">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Login History</h1>
+      <p class="page-subtitle">All sign-in sessions recorded on this device — stored locally in your browser.</p>
+    </div>
+    <div class="page-header-icon"><i class="fas fa-history"></i></div>
+  </div>
+
+  <!-- Summary bar -->
+  <div class="card mb-4" style="border-left:4px solid var(--primary);">
+    <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div style="font-size:1.75rem;font-weight:800;color:var(--primary);" id="login-history-count">0</div>
+          <div style="font-size:.75rem;color:var(--text-muted);font-weight:600;">Total Sessions</div>
+        </div>
+        <div style="width:1px;height:40px;background:var(--border-color);"></div>
+        <div>
+          <div style="font-size:.875rem;font-weight:600;color:var(--text-primary);">
+            <i class="fas fa-shield-alt me-1" style="color:var(--success);"></i>
+            History stored privately on this device only
+          </div>
+          <div style="font-size:.78rem;color:var(--text-muted);margin-top:.2rem;">
+            Up to 50 most recent sessions are kept · Data never leaves your browser
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-sm"
+        style="background:#fee2e2;color:#dc2626;border:1px solid #fecaca;font-size:.8rem;"
+        onclick="confirmClearAll()">
+        <i class="fas fa-trash-alt me-1"></i> Clear All History
+      </button>
+    </div>
+  </div>
+
+  <!-- History table -->
+  <div class="card">
+    <div class="card-header">
+      <i class="fas fa-sign-in-alt" style="color:var(--primary);"></i>
+      <span style="font-weight:700;">Session Records</span>
+    </div>
+    <div class="card-body" style="padding:0;">
+
+      <!-- Empty state -->
+      <div id="login-history-empty" style="display:none;text-align:center;padding:3rem 1rem;">
+        <i class="fas fa-history" style="font-size:2.5rem;color:var(--text-muted);margin-bottom:1rem;display:block;"></i>
+        <div style="font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:.5rem;">No login history yet</div>
+        <div style="font-size:.875rem;color:var(--text-muted);">
+          Sign in from the <a href="/login">login page</a> to start recording sessions.
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="background:var(--bg-tertiary);border-bottom:2px solid var(--border-color);">
+              <th style="padding:.75rem 1rem;font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;text-align:left;width:40px;">#</th>
+              <th style="padding:.75rem 1rem;font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;text-align:left;">Account</th>
+              <th style="padding:.75rem 1rem;font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;text-align:left;">Date &amp; Time</th>
+              <th style="padding:.75rem 1rem;font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;text-align:left;">Device</th>
+              <th style="padding:.75rem 1rem;font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;text-align:left;">Browser</th>
+              <th style="padding:.75rem 1rem;font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;text-align:left;">OS</th>
+              <th style="padding:.75rem 1rem;font-size:.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;text-align:left;width:50px;"></th>
+            </tr>
+          </thead>
+          <tbody id="login-history-tbody">
+            <!-- Rows injected by LoginHistory.render() -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Note -->
+  <div style="margin-top:1.25rem;padding:1rem 1.25rem;background:var(--bg-tertiary);border-radius:var(--radius-md);border:1px solid var(--border-color);">
+    <div style="display:flex;align-items:flex-start;gap:.75rem;">
+      <i class="fas fa-info-circle" style="color:var(--primary);margin-top:.15rem;flex-shrink:0;"></i>
+      <div style="font-size:.82rem;color:var(--text-secondary);line-height:1.6;">
+        <strong style="color:var(--text-primary);">About this history:</strong>
+        Sessions are recorded in your browser's <code>localStorage</code> on this device only.
+        Clearing your browser data or switching browsers will remove this history.
+        A maximum of <strong>50</strong> sessions are stored; older entries are automatically removed.
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmClearAll() {
+  if (!confirm('Clear all login history? This cannot be undone.')) return;
+  LoginHistory.clear();
+  LoginHistory.render();
+  Toast.show('Cleared', 'All login history has been deleted.', 'success');
+}
+</script>
+{% endblock %}
